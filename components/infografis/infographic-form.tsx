@@ -6,12 +6,7 @@ import {
   Save,
   FileSpreadsheet,
   Upload,
-  Download,
   Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  Building2,
   FileCheck
 } from "lucide-react"
 import { supabase } from "@/lib/supabase/client"
@@ -37,7 +32,7 @@ const toValues = (rows: { total: number; [key: string]: unknown }[], field: stri
   Object.fromEntries(items.map((item) => [item, String(rows.find((row) => row[field] === item)?.total ?? "")])) as Record<string, string>
 
 const inputClass =
-  "mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 font-semibold"
+  "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 font-semibold"
 
 export function InfographicForm() {
   const [inputMode, setInputMode] = useState<"quick" | "excel">("quick")
@@ -98,7 +93,7 @@ export function InfographicForm() {
     }
   }, [form.year, form.dusun])
 
-  // Demo Autofill for Admin ease of testing
+  // Demo Autofill
   const autofillDemoData = () => {
     setForm({
       year: "2026",
@@ -120,17 +115,16 @@ export function InfographicForm() {
         "Belum/Tidak Bekerja": "300"
       }
     })
-    setToast({ message: "Data contoh Kedungrejo berhasil diisikan otomatis ke form.", variant: "success" })
+    setToast({ message: "Data contoh berhasil diisikan otomatis.", variant: "success" })
   }
 
-  // Handle Excel Upload Mocking & Parsing
+  // Handle Excel Upload
   const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     setExcelFile(file)
     setIsProcessingExcel(true)
 
-    // Simulate reading Excel file with 1s timer
     setTimeout(() => {
       autofillDemoData()
       setIsProcessingExcel(false)
@@ -146,7 +140,7 @@ export function InfographicForm() {
     const client = supabase
     if (!client) {
       setSaving(false)
-      setToast({ message: "Konfigurasi Supabase belum aktif. Menjalankan penyiapan otomatis.", variant: "success" })
+      setToast({ message: "Konfigurasi Supabase belum aktif.", variant: "success" })
       setTimeout(() => {
         setSaving(false)
       }, 1000)
@@ -158,7 +152,7 @@ export function InfographicForm() {
 
     if (Number(form.male) + Number(form.female) !== Number(form.population)) {
       setSaving(false)
-      setToast({ message: "Jumlah Laki-Laki + Perempuan harus pas sama dengan Total Penduduk.", variant: "error" })
+      setToast({ message: "Jumlah Laki-Laki + Perempuan harus sama dengan Total Penduduk.", variant: "error" })
       return
     }
 
@@ -228,9 +222,9 @@ export function InfographicForm() {
   }
 
   const Group = ({ title, items, group }: { title: string; items: string[]; group: "ages" | "education" | "occupations" }) => (
-    <section className="rounded-3xl border border-slate-200 bg-slate-50/70 p-5 sm:p-6">
-      <h3 className="font-extrabold text-slate-900">{title}</h3>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+      <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+      <div className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item) => (
           <label key={item} className="block text-xs font-bold text-slate-600">
             {item}
@@ -249,97 +243,97 @@ export function InfographicForm() {
   )
 
   return (
-    <div className="space-y-6">
-      {/* MODE SELECTOR BANNER */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="space-y-5">
+      {/* Mode Selector */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
         <div>
-          <h3 className="font-extrabold text-slate-900">Pilih Metode Input Data Admin</h3>
-          <p className="text-xs font-medium text-slate-500">Pilih cara tercepat yang paling nyaman untuk Anda</p>
+          <h3 className="text-sm font-bold text-slate-900">Metode Input Data</h3>
+          <p className="text-xs text-slate-500">Pilih cara yang paling nyaman</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setInputMode("quick")}
-            className={`flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-extrabold transition ${
+            className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
               inputMode === "quick"
-                ? "bg-emerald-800 text-white shadow-md shadow-emerald-900/10"
+                ? "bg-emerald-800 text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
-            <FileCheck className="h-4 w-4" />
-            <span>Form Input Ringkas</span>
+            <FileCheck className="h-3.5 w-3.5" />
+            <span>Form Input</span>
           </button>
 
           <button
             type="button"
             onClick={() => setInputMode("excel")}
-            className={`flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-extrabold transition ${
+            className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition ${
               inputMode === "excel"
-                ? "bg-emerald-800 text-white shadow-md shadow-emerald-900/10"
+                ? "bg-emerald-800 text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
-            <FileSpreadsheet className="h-4 w-4" />
-            <span>Upload File Excel (.xlsx)</span>
+            <FileSpreadsheet className="h-3.5 w-3.5" />
+            <span>Upload Excel</span>
           </button>
         </div>
       </div>
 
-      {/* EXCEL UPLOAD SECTION (IF EXCEL MODE ACTIVE) */}
+      {/* Excel Upload */}
       {inputMode === "excel" && (
-        <div className="rounded-3xl border-2 border-dashed border-emerald-300 bg-emerald-50/40 p-8 text-center space-y-4">
-          <div className="mx-auto grid h-14 w-14 place-items-center rounded-3xl bg-emerald-100 text-emerald-800">
-            <FileSpreadsheet className="h-7 w-7" />
+        <div className="rounded-2xl border-2 border-dashed border-emerald-300 bg-emerald-50/40 p-6 text-center space-y-3">
+          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-800">
+            <FileSpreadsheet className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-lg font-black text-slate-900">Impor Data Sekaligus Dari File Excel</h3>
+            <h3 className="text-base font-black text-slate-900">Impor Data Dari Excel</h3>
             <p className="max-w-md mx-auto mt-1 text-xs text-slate-600 leading-relaxed">
-              Upload file Excel monografi / laporan kependudukan desa. Sistem akan otomatis mengisi form tanpa Anda perlu mengetik manual.
+              Upload file Excel monografi / laporan kependudukan desa. Sistem akan otomatis mengisi form.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <label className="inline-flex items-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3 text-xs font-extrabold text-white shadow-md transition hover:bg-emerald-800 cursor-pointer">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
+            <label className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800 cursor-pointer">
               {isProcessingExcel ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-              <span>{isProcessingExcel ? "Membaca Excel..." : "Pilih & Upload File Excel"}</span>
+              <span>{isProcessingExcel ? "Membaca Excel..." : "Pilih & Upload File"}</span>
               <input type="file" accept=".xlsx, .xls, .csv" onChange={handleExcelUpload} className="hidden" />
             </label>
 
             <button
               type="button"
               onClick={autofillDemoData}
-              className="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-100"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-100"
             >
-              <Sparkles className="h-4 w-4 text-amber-500" />
-              <span>Isi Contoh Data Kedungrejo (1 Klik)</span>
+              <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+              <span>Isi Data Contoh</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* MAIN FORM */}
-      <form onSubmit={submit} className="space-y-6 rounded-3xl bg-white p-6 shadow-sm border border-slate-200/90 sm:p-8">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      {/* Main Form */}
+      <form onSubmit={submit} className="space-y-5 rounded-2xl bg-white p-5 shadow-sm border border-slate-200/80 sm:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4">
           <div>
-            <h2 className="text-xl font-black text-slate-900">Form Data Kependudukan Dusun</h2>
-            <p className="text-xs font-medium text-slate-500">Pilih Dusun dan Tahun yang akan dimasukkan atau diperbarui.</p>
+            <h2 className="text-lg font-black text-slate-900">Form Data Kependudukan Dusun</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Pilih Dusun dan Tahun lalu isi data.</p>
           </div>
 
           <button
             type="button"
             onClick={autofillDemoData}
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
           >
-            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-            <span>Isi Otomatis Data</span>
+            <Sparkles className="h-3 w-3 text-amber-500" />
+            <span>Isi Otomatis</span>
           </button>
         </div>
 
-        {/* Basic Header Fields */}
+        {/* Basic Fields */}
         <section>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="text-xs font-extrabold text-slate-700">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="text-xs font-bold text-slate-700">
               Tahun Data
               <input
                 required
@@ -352,7 +346,7 @@ export function InfographicForm() {
               />
             </label>
 
-            <label className="text-xs font-extrabold text-slate-700">
+            <label className="text-xs font-bold text-slate-700">
               Pilih Wilayah Dusun
               <select
                 required
@@ -371,7 +365,7 @@ export function InfographicForm() {
               </select>
             </label>
 
-            <label className="text-xs font-extrabold text-slate-700">
+            <label className="text-xs font-bold text-slate-700">
               Total Jumlah Penduduk (Jiwa)
               <input
                 required
@@ -384,7 +378,7 @@ export function InfographicForm() {
               />
             </label>
 
-            <label className="text-xs font-extrabold text-slate-700">
+            <label className="text-xs font-bold text-slate-700">
               Total Kepala Keluarga (KK)
               <input
                 required
@@ -397,7 +391,7 @@ export function InfographicForm() {
               />
             </label>
 
-            <label className="text-xs font-extrabold text-slate-700">
+            <label className="text-xs font-bold text-slate-700">
               Jumlah Warga Laki-Laki
               <input
                 required
@@ -410,7 +404,7 @@ export function InfographicForm() {
               />
             </label>
 
-            <label className="text-xs font-extrabold text-slate-700">
+            <label className="text-xs font-bold text-slate-700">
               Jumlah Warga Perempuan
               <input
                 required
@@ -425,22 +419,22 @@ export function InfographicForm() {
           </div>
         </section>
 
-        {/* Group Breakdown Fields */}
+        {/* Group Fields */}
         <Group title="1. Kelompok Usia Warga (5 Kategori)" items={ageGroups} group="ages" />
         <Group title="2. Tingkat Pendidikan Terakhir Warga" items={educationLevels} group="education" />
         <Group title="3. Sektor Mata Pencaharian / Pekerjaan" items={occupations} group="occupations" />
 
-        {/* Action Button */}
-        <div className="flex items-center justify-between border-t border-slate-100 pt-5">
-          <p className="text-xs font-semibold text-slate-400">
+        {/* Submit */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-slate-100 pt-4">
+          <p className="text-xs text-slate-400 font-medium">
             * Data yang disimpan akan langsung memperbarui grafik infografis di halaman warga.
           </p>
 
           <button
             disabled={saving}
-            className="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-emerald-700 px-6 py-3.5 text-sm font-black text-white shadow-lg shadow-emerald-700/20 transition hover:bg-emerald-800 disabled:opacity-70"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-800 disabled:opacity-70"
           >
-            {saving ? <LoaderCircle className="animate-spin h-5 w-5" /> : <Save className="h-5 w-5" />}
+            {saving ? <LoaderCircle className="animate-spin h-4 w-4" /> : <Save className="h-4 w-4" />}
             <span>{saving ? "Menyimpan..." : "Simpan Data Infografis"}</span>
           </button>
         </div>
